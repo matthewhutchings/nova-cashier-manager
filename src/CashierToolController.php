@@ -38,8 +38,6 @@ class CashierToolController extends Controller
         $this->middleware(function ($request, $next) use ($config) {
             Stripe::setApiKey($config->get('services.stripe.secret'));
 
-
-
             $this->stripeModel = $config->get('services.stripe.model');
 
             $this->subscriptionName = $config->get('nova-cashier-manager.subscription_name');
@@ -69,8 +67,6 @@ class CashierToolController extends Controller
         }
 
         $stripeSubscription = StripeSubscription::retrieve($subscription->stripe_id);
-
-
 
         return [
             'user' => $billable->toArray(),
@@ -192,20 +188,19 @@ class CashierToolController extends Controller
      */
     private function formatCards($card, $defaultCardId = null)
     {
+
         $data = [
             [
                 'id' => $card->id,
                 'is_default' => true,
                 'name' => $card->name,
-                'last4' => $card->last4,
-                'country' => $card->country,
-                'brand' => $card->brand,
-                'exp_month' => $card->exp_month,
-                'exp_year' => $card->exp_year,
+                'last4' => $card->card_last_four,
+                'country' => $card->card_country,
+                'brand' => $card->card_brand,
+                'exp_month' => '',
+                'exp_year' => '',
             ]
         ];
-
-
 
         return collect($data)->toArray();
     }
